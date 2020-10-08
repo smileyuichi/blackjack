@@ -9,8 +9,23 @@ class Money
     end
 end
 
+class Card
+    #カードオブジェクトからマークと数字の実引数を受け取る
+    def initialize(mark, number)
+        @mark = mark
+        @number = number
+    end
+
+    #カードのmarkとnumberを表示
+    def show
+        "#{@mark}の#{@number}"
+    end
+end
+
+
 
 class Blackjack
+    p card.show
     def start
         money = Money.new
         puts <<~"text"
