@@ -75,6 +75,28 @@ class Player
     end
 end
 
+class Dealer
+    def initialize
+        @hands=[]
+    end
+
+    def first_draw_dealer(deck)
+        # 生成したdeckからdrawメソッドを用いてカードを一枚引いてくる
+        card = deck.draw
+        # 引いたカードを手札に追加する
+        @hands << card
+        puts <<~text
+        ------------Dealer手札------------
+        1枚目 ： #{card.show}
+        2枚目 ： 伏せられている
+        ----------------------------------
+        text
+        # 初回は2回なので再度繰り返す
+        card = deck.draw
+        @hands << card
+    end
+end
+
 class Blackjack
     def start
         money = Money.new
@@ -91,6 +113,7 @@ class Blackjack
         #トランプデッキを生成する
         deck = Deck.new
         player = Player.new
+        dealer = Dealer.new
         
         
         #所持金の確認
@@ -109,7 +132,7 @@ class Blackjack
         エラー：所持金以内の数値で入力してください
         text
         player.first_draw_player(deck)
-
+        dealer.first_draw_dealer(deck)
     end
 end
 
