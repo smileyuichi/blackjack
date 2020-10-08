@@ -47,10 +47,32 @@ class Deck
         #配列の先頭を抜き取る
         @cards.shift
     end
-    #デバッグ用
+    # デバッグ用
     # def numberOfSheets
     #     p @cards.size
     # end
+end
+
+class Player
+    def initialize
+        @hands = []
+    end
+
+    #最初に2回デッキからカードを引く
+    def first_draw_player(deck)
+        card = deck.draw
+        # 引いたカードを手札に追加する
+        @hands << card
+        # 初回は2回なので再度繰り返す
+        card = deck.draw
+        @hands << card
+        puts ""
+        puts "------------Player手札------------"
+        @hands.each.with_index(1) do |hand, i|
+            puts " #{i}枚目 ： #{hand.show}"
+        end
+        puts "---------------------------------"
+    end
 end
 
 class Blackjack
@@ -65,13 +87,18 @@ class Blackjack
         所持金：#{money.check}からスタート！！
         text
         #moneyを維持したまま、ゲームをループさせる
-
+        
+        #トランプデッキを生成する
+        deck = Deck.new
+        player = Player.new
+        
+        
         #所持金の確認
         puts <<~text
         現在の所持金は#{money.check}円です。
         掛け金を入力して下さい。
         text
-
+        
         #掛け金入力後の表示(所持金内の入力)
         puts <<~text
         掛け金：#{}円
@@ -81,6 +108,8 @@ class Blackjack
         puts <<~text
         エラー：所持金以内の数値で入力してください
         text
+        player.first_draw_player(deck)
+
     end
 end
 
