@@ -188,8 +188,8 @@ class Blackjack
 
         text
         #ベットが正常に行われるまでループするためのフラグ
-        bet_certification = false
-        while !bet_certification
+        bet_pass = false
+        while !bet_pass
             #ベット金額を入力
             @bet = gets.chomp.to_i
             if @bet.between?(1,money.check)
@@ -203,7 +203,7 @@ class Blackjack
     
                 text
                 #ベット完了したらループを抜ける
-                bet_certification = true
+                bet_pass = true
             else
                 #掛け金入力後の表示(所持金以上またはエラー)
                 puts <<~text
@@ -238,8 +238,8 @@ class Blackjack
         @dealer_point = dealer.point_dealer
 
         #プレイヤーの行動を制御
-        action_certification = false
-        while !action_certification
+        action_pass = false
+        while !action_pass
             puts <<~text
             ----------------------------------
             プレイヤーの行動を選択して下さい。
@@ -259,10 +259,10 @@ class Blackjack
                 text
                 if @player_point >= 22
                     bust("dealer")
-                    action_certification = true
+                    action_pass = true
                 end
             elsif action == 2
-                action_certification = true
+                action_pass = true
             else
                 puts <<~text
                 ----------------------------------
