@@ -72,7 +72,7 @@ class Player
     end
 
     #最初に2回デッキからカードを引く
-    def first_draw_player(deck)
+    def first_draw(deck)
         card = deck.draw
         # 引いたカードを手札に追加する
         @hands << card
@@ -133,7 +133,7 @@ class Dealer
         @hands=[]
     end
 
-    def first_draw_dealer(deck)
+    def first_draw(deck)
         # 生成したdeckからdrawメソッドを用いてカードを一枚引いてくる
         card = deck.draw
         # 引いたカードを手札に追加する
@@ -160,6 +160,11 @@ class Dealer
             #puts player_point
         end
         dealer_point
+    end
+
+    def draw_dealer(deck)
+        card = deck.draw
+        @hands << card
     end
 end
 
@@ -217,7 +222,7 @@ class Blackjack
 
         end
         # deckからカードを引く
-        player.first_draw_player(deck)
+        player.first_draw(deck)
         #playerのポイントを計算する
         @player_point = player.point_player
         if player.count_11 == 0
@@ -233,12 +238,14 @@ class Blackjack
             ----------------------------------
             text
         end
-        dealer.first_draw_dealer(deck)
+        dealer.first_draw(deck)
         #dealerのポイントを計算する
         @dealer_point = dealer.point_dealer
 
         #プレイヤーの行動を制御
         action_pass = false
+        #プレイヤーがバストした際はディーラーはカードを引かない為のフラグ
+        @dealer_though = false
         while !action_pass
             puts <<~text
             ----------------------------------
@@ -259,6 +266,7 @@ class Blackjack
                 text
                 if @player_point >= 22
                     bust("dealer")
+                    @dealer_though = true
                     action_pass = true
                 end
             elsif action == 2
@@ -271,13 +279,33 @@ class Blackjack
                 text
             end
         end
-        #dealerが引く
+        #バストしていなければ以下の処理を行う
+        if !@dealer_though
+            #@dealer_pointが16以下ならカードを引く
+            while @dealer_point <= 16
+                dealer.draw_dealer(deck)
+                @dealer_point = dealer.point_dealer
+            end
+            puts <<~text
+            ----------------------------------
+            ディーラーがカードを引き終わりました。
+            結果判定に参りましょう！
+            ----------------------------------
+            text
+        end
+        judgement(@player_point, @dealer_point, @bet, @dealer_though)
     end
 
     def bust(winner)
         puts <<~text
+        ----------------------------------
         バストしました。#{winner}の勝ちです。
+        ----------------------------------
         text
+    end
+
+    def judgement(player,dealer,bet,dealer_though)
+        puts [player, dealer, bet, dealer_though]
     end
 end
 
