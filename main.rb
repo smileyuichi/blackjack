@@ -116,6 +116,17 @@ class Player
     def count_11
         @count_11
     end
+
+    def draw_player(deck)
+        card = deck.draw
+        # 引いたカードを手札に追加する
+        @hands << card
+        puts "------------Player手札------------"
+        @hands.each.with_index(1) do |hand, i|
+            puts " #{i}枚目 ： #{hand.show}"
+        end
+        puts "---------------------------------"
+    end
 end
 class Dealer
     def initialize
@@ -225,6 +236,48 @@ class Blackjack
         dealer.first_draw_dealer(deck)
         #dealerのポイントを計算する
         @dealer_point = dealer.point_dealer
+
+        #プレイヤーの行動を制御
+        action_certification = false
+        while !action_certification
+            puts <<~text
+            ----------------------------------
+            プレイヤーの行動を選択して下さい。
+            1.Hit 2.Stand
+            ----------------------------------
+            text
+            action = gets.chomp.to_i
+            #Hitを選択した場合
+            if action == 1
+                # deckから一枚カードを取る
+                player.draw_player(deck)
+                @player_point = player.point_player
+                puts <<~text
+                ----------------------------------
+                あなたの手札の合計点数は#{@player_point}です。
+                ----------------------------------
+                text
+                if @player_point >= 22
+                    bust("dealer")
+                    action_certification = true
+                end
+            elsif action == 2
+                action_certification = true
+            else
+                puts <<~text
+                ----------------------------------
+                エラー：選択肢1または2をお選び下さい。
+                ----------------------------------
+                text
+            end
+        end
+        #dealerが引く
+    end
+
+    def bust(winner)
+        puts <<~text
+        バストしました。#{winner}の勝ちです。
+        text
     end
 end
 
