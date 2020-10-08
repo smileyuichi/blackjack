@@ -4,8 +4,9 @@ class Money
         @money = 10000
     end
 
-    def check
-        @money
+    #残金の確認とベット入金
+    def check(bet=0)
+        @money -= bet
     end
 end
 
@@ -114,23 +115,43 @@ class Blackjack
         deck = Deck.new
         player = Player.new
         dealer = Dealer.new
-        
-        
         #所持金の確認
         puts <<~text
+
         現在の所持金は#{money.check}円です。
         掛け金を入力して下さい。
+
         text
+        #ベットが正常に行われるまでループするためのフラグ
+        bet_certification = false
+        while !bet_certification
+            #ベット金額を入力
+            @bet = gets.chomp.to_i
+            if @bet.between?(1,money.check)
+                #掛け金入力後の表示(所持金内の入力)
+                puts <<~text
+    
+                ----------------------------------
+                掛け金：#{@bet}円
+                残金：#{money.check(@bet)}円
+                ----------------------------------
+    
+                text
+                #ベット完了したらループを抜ける
+                bet_certification = true
+            else
+                #掛け金入力後の表示(所持金以上またはエラー)
+                puts <<~text
+    
+                ----------------------------------
+                エラー：所持金以内の数値で入力してください
+                ----------------------------------
+    
+                text
+            end
+
+        end
         
-        #掛け金入力後の表示(所持金内の入力)
-        puts <<~text
-        掛け金：#{}円
-        残金：#{}円
-        text
-        #掛け金入力後の表示(所持金以上またはエラー)
-        puts <<~text
-        エラー：所持金以内の数値で入力してください
-        text
         player.first_draw_player(deck)
         dealer.first_draw_dealer(deck)
     end
