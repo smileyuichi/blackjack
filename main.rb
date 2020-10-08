@@ -21,6 +21,18 @@ class Card
     def show
         "#{@mark}の#{@number}"
     end
+
+    #対象カードのポイントを返す
+    def point
+        if @number == "J" || @number == "Q" || @number == "K"
+            10
+        elsif @number == "A"
+            0
+        else
+            #数字は文字列として格納しているので、数値に変換して返す
+            @number.to_i
+        end
+    end
 end
 
 class Deck
@@ -74,8 +86,37 @@ class Player
         end
         puts "---------------------------------"
     end
-end
 
+    def point_player
+        # 点数の初期化
+        player_point = 0
+        count_a = 0
+        @count_11 = 0
+        # 手札のカードを一枚ずつ確認して点数を計算していく
+        @hands.each do |draw_card|
+            # カードに対して、pointメソッドを用いて点数を確認。それを点数に足していく
+            player_point += draw_card.point
+            #Aを引いた場合
+            if draw_card.point == 0
+                count_a += 1
+            end
+        end
+        #Aを引いた分だけ数値の吟味を行う
+        count_a.times do |i|
+            if player_point <= 10
+                player_point += 11
+                @count_11 += 1
+            else
+                player_point += 1
+            end
+        end
+        return player_point
+    end
+
+    def count_11
+        @count_11
+    end
+end
 class Dealer
     def initialize
         @hands=[]
@@ -95,6 +136,19 @@ class Dealer
         # 初回は2回なので再度繰り返す
         card = deck.draw
         @hands << card
+    end
+
+    # dealerの点数を表示
+    def point_dealer
+        # 点数の初期化
+        dealer_point = 0
+        # 手札のカードを一枚ずつ確認して点数を計算していく
+        @hands.each do |draw_card|
+            # カードに対して、pointメソッドを用いて点数を確認。それを点数に足していく
+            dealer_point += draw_card.point
+            #puts player_point
+        end
+        dealer_point
     end
 end
 
@@ -151,9 +205,26 @@ class Blackjack
             end
 
         end
-        
+        # deckからカードを引く
         player.first_draw_player(deck)
+        #playerのポイントを計算する
+        @player_point = player.point_player
+        if player.count_11 == 0
+            puts <<~text
+            ----------------------------------
+            あなたの手札の合計点数は#{@player_point}です。
+            ----------------------------------
+            text
+        else
+            puts <<~text
+            ----------------------------------
+            あなたの手札の合計点数は#{@player_point}、もしくは#{@player_point-10}です。
+            ----------------------------------
+            text
+        end
         dealer.first_draw_dealer(deck)
+        #dealerのポイントを計算する
+        @dealer_point = dealer.point_dealer
     end
 end
 
