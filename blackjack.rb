@@ -161,7 +161,13 @@ class Blackjack
     end
 
     def judgement(player,dealer,bet,dealer_though,player_win)
-        puts dealer
+        puts <<~text
+
+        ----------------------------------
+        ディーラーの手札の合計：#{dealer}
+        ----------------------------------
+        
+        text
         #プレイヤーがディーラーより数値が大きいかつプレイヤーがバストしていない
         #または、ディーラーがバストしている状態
         if player > dealer && !dealer_though || player_win
