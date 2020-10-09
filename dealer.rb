@@ -1,7 +1,6 @@
-class Dealer
-    def initialize
-        @hands=[]
-    end
+require "./gamer"
+
+class Dealer < Gamer
 
     def first_draw(deck)
         # 生成したdeckからdrawメソッドを用いてカードを一枚引いてくる
@@ -32,8 +31,4 @@ class Dealer
         dealer_point
     end
 
-    def draw_dealer(deck)
-        card = deck.draw
-        @hands << card
-    end
 end

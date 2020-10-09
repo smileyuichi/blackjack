@@ -1,7 +1,7 @@
-class Player
-    def initialize
-        @hands = []
-    end
+require "./gamer"
+
+class Player < Gamer
+
 
     #最初に2回デッキからカードを引く
     def first_draw(deck)
