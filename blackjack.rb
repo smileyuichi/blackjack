@@ -155,9 +155,22 @@ class Blackjack
             1.続行する　2.終了する
             ----------------------------------
             text
-            game_end = gets.chomp.to_i
-            if game_end == 2
-                game_loop = false
+            #正しい入力があるまでループする
+            game_end_pass = false
+            while !game_end_pass
+                game_end = gets.chomp.to_i
+                if game_end == 2
+                    game_loop = false
+                    game_end_pass = true
+                elsif game_end == 1
+                    game_end_pass = true
+                else
+                    puts <<~text
+                    ----------------------------------
+                    エラー：選択肢1または2をお選び下さい。
+                    ----------------------------------
+                    text
+                end
             end
         end
     end
