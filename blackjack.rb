@@ -149,6 +149,16 @@ class Blackjack
                 text
                 game_loop = false
             end
+            puts <<~text
+            ----------------------------------
+            ゲームを続行しますか？
+            1.続行する　2.終了する
+            ----------------------------------
+            text
+            game_end = gets.chomp.to_i
+            if game_end == 2
+                game_loop = false
+            end
         end
     end
 
